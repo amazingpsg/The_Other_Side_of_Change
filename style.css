@@ -19,7 +19,7 @@
     -webkit-font-smoothing: antialiased;
 }
 
-/* 브라우저 화면의 꿀렁임, 오버스크롤 고무줄 효과를 완벽하게 차단하기 위한 강제 고정 */
+/* 데스크탑 기본 스타일: 불필요한 position: fixed를 해제하여 브라우저 기본 레이아웃 안정성 확보 */
 html, body {
     background-color: var(--bg-color);
     color: var(--text-primary);
@@ -27,10 +27,8 @@ html, body {
     overflow: hidden;
     height: 100%;
     width: 100%;
-    position: fixed; /* 페이지의 모든 스크롤 및 브라우저 당기기 원천 차단 */
-    top: 0;
-    left: 0;
-    overscroll-behavior: none;
+    margin: 0;
+    padding: 0;
 }
 
 /* 뷰포트를 완전히 잠그는 컨테이너 */
@@ -68,11 +66,10 @@ html, body {
 /* 슬라이드 내 레이아웃 (영화 포스터 이미지 + 글 내용의 2분할) */
 .slide-content {
     display: grid;
-    grid-template-columns: 1.2fr 1.8fr;
+    grid-template-columns: 320px 1.8fr; /* 포스터 폭을 320px로 단단히 고정 */
     gap: 5%;
     width: 100%;
     max-width: 1200px;
-    /* 데스크탑 화면이 세로로 찌그러지지 않도록 최대 높이 가이드라인 적용 */
     max-height: 80vh; 
     align-items: center;
     z-index: 2;
@@ -83,11 +80,9 @@ html, body {
     position: relative;
     border-radius: 16px;
     overflow: hidden;
-    aspect-ratio: 2 / 3;
-    /* 데스크탑 가로 해상도가 넓어질 때 세로로 무제한 커져 화면을 찌그러뜨리는 것을 완벽 차단 */
-    max-height: 60vh;
-    max-width: 40vh;
-    margin: 0 auto;
+    width: 320px;   /* 데스크탑 가로 확장 시 크기가 미쳐 날뛰는 현상 완벽 방지 */
+    height: 480px;  /* 2:3 비율 절대값 박음질 */
+    max-width: 100%;
     /* 조명 바이어스: 좌측 상단에 미세한 빛, 우측 하단에 부드러운 그림자 */
     box-shadow: 12px 12px 30px rgba(0, 0, 0, 0.9), 
                 -4px -4px 15px rgba(255, 255, 255, 0.03);
@@ -113,8 +108,7 @@ html, body {
     backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 40px;
-    /* 데스크탑에서도 창 높이가 낮을 때 본문이 화면 밖으로 넘치지 않도록 카드 내부 스크롤 허용 */
-    max-height: 70vh;
+    max-height: 75vh;
     overflow-y: auto;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-left-color: rgba(255, 255, 255, 0.15);
@@ -249,10 +243,11 @@ html, body {
 /* 화면 크기에 맞춰 폰트 유동 조절 (모바일 타깃) */
 @media (max-width: 768px) {
     html, body {
-        position: fixed;
+        position: fixed; /* 모바일에서만 fixed 고정하여 오버스크롤 고무줄 효과 차단 */
         width: 100%;
         height: 100%;
         overflow: hidden;
+        touch-action: pan-y;
     }
     
     .slide {
@@ -268,8 +263,9 @@ html, body {
     }
 
     .poster-wrapper {
-        max-width: 110px; /* 미세 크기 조절로 타이트한 폰 렌더링 최적화 */
-        max-height: 25vh; /* 모바일 세로 높이 제한 */
+        width: 110px; /* 모바일용 가로폭 */
+        height: 165px; /* 모바일 2:3 종횡비 */
+        max-height: 25vh;
         margin: 0 auto;
         box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.8), 
                     -2px -2px 8px rgba(255, 255, 255, 0.03);
@@ -280,7 +276,6 @@ html, body {
         border-radius: 16px;
         max-height: 48vh;
         overflow-y: auto;
-        /* 카드 내부에서 세로 스크롤을 원활히 지원 */
         touch-action: pan-y;
         box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.8),
                     -3px -3px 10px rgba(255, 255, 255, 0.02);
