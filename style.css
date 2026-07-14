@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Outfit:wght@300;600;900&display=swap');
 
 :root {
-    /* 침선비장 비밀 비법서의 5색 배색 가이드라인 */
+    /* 침선비장 언년이의 5색 배색 가이드라인 */
     --bg-color: hsl(240, 16%, 6%);       /* 거의 완벽한 검정, 영화관 테마 */
     --accent-red: hsl(355, 100%, 50%);    /* 웅장한 블러드 레드 */
     --accent-gold: hsl(38, 100%, 55%);    /* 화려한 오렌지 골드 */
@@ -19,78 +19,55 @@
     -webkit-font-smoothing: antialiased;
 }
 
-/* 데스크탑 기본 스타일: 불필요한 position: fixed를 해제하여 브라우저 기본 레이아웃 안정성 확보 */
-html, body {
+body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     font-family: var(--font-body);
-    overflow: hidden !important;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    /* 스크롤바가 숨더라도 슬라이더 폭이 왜곡되지 않도록 방지 */
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    overflow: hidden; /* 슬라이드 쇼 형태라 브라우저 스크롤 바를 감춤 */
+    height: 100vh;
+    width: 100vw;
 }
 
-/* 크롬, 사파리, 오페라에서 스크롤바 틈새를 원천 소거 */
-html::-webkit-scrollbar, body::-webkit-scrollbar {
-    display: none;
-}
-
-/* 뷰포트를 완전히 잠그는 컨테이너 */
-.viewport-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-/* 슬라이더 전체 컨테이너 (vw 대신 %를 사용하여 누적 오차 완벽 차단) */
+/* 슬라이더 전체 컨테이너 */
 .slider-container {
     position: relative;
-    width: 600%; /* 6개 슬라이드 기준 폭 고정 */
-    height: 100%;
+    width: 100%;
+    height: 100vh;
     display: flex;
     transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
-/* 개별 슬라이드 공통 (100% / 6 = 16.6666% 지정으로 화면 내 비율 칼같이 보존) */
+/* 개별 슬라이드 공통 */
 .slide {
-    width: 16.6666%;
-    min-width: 16.6666%;
-    flex-shrink: 0; /* 강제로 찌그러짐 차단 */
-    height: 100%;
+    min-width: 100vw;
+    height: 100vh;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4% 6%; /* 좌우 패딩을 미세하게 늘려 쾌적한 뷰포트 확보 */
+    padding: 4% 8%;
     background-size: cover;
     background-position: center;
 }
 
-/* 슬라이드 내 레이아웃 (그리드 대신 플렉스박스를 도입하여 물리적인 겹침을 완벽 차단) */
+/* 슬라이드 내 레이아웃 (영화 포스터 이미지 + 글 내용의 2분할) */
 .slide-content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 50px; /* 여백을 50px로 넉넉하게 넓혀 글방 아재 에세이의 독립 공간 사수 */
+    display: grid;
+    grid-template-columns: 1.2fr 1.8fr;
+    gap: 5%;
     width: 100%;
-    max-width: 1300px; /* 전체 컨텐츠 가로폭 한도를 넓혀 정보 카드가 찌그러지지 않게 방어 */
+    max-width: 1200px;
+    align-items: center;
     z-index: 2;
 }
 
-/* 영화 포스터 영역 (데스크탑 고정 320x480 규격 수호) */
+/* 영화 포스터 영역 (좌측 상단 조명 바이어스 적용) */
 .poster-wrapper {
     position: relative;
     border-radius: 16px;
     overflow: hidden;
-    width: 320px;   /* 가로 폭 320px로 절대 고정 */
-    height: 480px;  /* 세로 높이 480px로 절대 고정 */
-    flex-shrink: 0; /* 유연한 축소나 찌그러짐 원천 차단 */
-    /* 조명 바이어스: 좌측 상단에 미세한 빛, 우측 하단에 부드러운 그림자 */
+    aspect-ratio: 2 / 3;
+    /* 언년이의 조명 바이어스: 좌측 상단에 미세한 빛, 우측 하단에 부드러운 그림자 */
     box-shadow: 12px 12px 30px rgba(0, 0, 0, 0.9), 
                 -4px -4px 15px rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -109,21 +86,12 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     object-fit: cover;
 }
 
-/* 우측 텍스트 설명 카드 (높이 박음질 해제 및 min-height와 auto 높이 적용으로 찌부러짐 완벽 해결) */
+/* 우측 텍스트 설명 카드 (Glassmorphism + 조명 바이어스) */
 .info-card {
     background: rgba(20, 20, 25, 0.6);
     backdrop-filter: blur(20px);
     border-radius: 24px;
-    padding: 30px 40px; /* 상하 패딩 최적화로 가로 폭 및 세로 비율 밸런스 확보 */
-    min-height: 480px; /* 최소 포스터 높이와 대칭을 이루되 */
-    height: auto;      /* 글 분량이 많을 때는 자연스럽게 세로로 늘어날 수 있게 해방 */
-    max-height: 80vh;  /* 단, 브라우저 가용 세로 높이의 80%는 넘지 않게 조율 */
-    flex: 1;           /* 남은 가로 폭을 풍성하게 채움 */
-    min-width: 0;      /* 플렉스 안에서 가로 찌부러짐 및 겹침 버그 완벽 예방 */
-    overflow-y: auto;  /* 높이가 80vh를 초과할 때만 정갈하게 내부 세로 스크롤 작동 */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* 내부 글이 세로 중앙에 오도록 배치 */
+    padding: 40px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-left-color: rgba(255, 255, 255, 0.15);
     border-top-color: rgba(255, 255, 255, 0.15);
@@ -139,20 +107,19 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     color: var(--text-primary);
     font-family: var(--font-title);
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 2px;
     border-radius: 50px;
-    margin-bottom: 15px;
-    align-self: flex-start;
+    margin-bottom: 20px;
 }
 
 .title {
     font-family: var(--font-title);
     font-weight: 900;
-    font-size: 2.4rem; /* 타이틀 줄바꿈 찌그러짐을 막기 위해 살짝 콤팩트화 */
+    font-size: 3rem;
     line-height: 1.2;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-gold));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -162,10 +129,10 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .copywriting {
     font-family: var(--font-title);
     font-weight: 600;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     color: var(--accent-gold);
     line-height: 1.4;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     border-left: 4px solid var(--accent-red);
     padding-left: 15px;
 }
@@ -174,16 +141,12 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .description-container {
     max-width: 55ch; /* 한 줄당 35~55자 유지 */
     color: var(--text-muted);
-    font-size: 1rem;
-    line-height: 1.65;
+    font-size: 1.05rem;
+    line-height: 1.7;
 }
 
 .description-container p {
-    margin-bottom: 12px;
-}
-
-.description-container p:last-child {
-    margin-bottom: 0;
+    margin-bottom: 15px;
 }
 
 .description-container strong {
@@ -192,7 +155,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 /* 네비게이션 화살표 버튼 (피츠의 법칙 적용: 크고 클릭하기 쉽게) */
 .nav-btn {
-    position: fixed; /* 뷰포트에 영구 박음질 */
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
     width: 70px;
@@ -206,7 +169,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 100;
+    z-index: 10;
     transition: all 0.3s ease;
     box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
 }
@@ -223,13 +186,13 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 /* 하단 슬라이드 인디케이터 */
 .indicators {
-    position: fixed; /* 뷰포트에 영구 박음질 */
+    position: absolute;
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 15px;
-    z-index: 100;
+    z-index: 10;
 }
 
 .dot {
@@ -259,85 +222,23 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     z-index: 1;
 }
 
-/* 모바일 전용 미디어 쿼리 (가로폭 1024px 이하의 소형 스크린만 반응형 분기 처리) */
-@media (max-width: 1024px) {
-    html, body {
-        position: fixed; /* 모바일에서 뷰포트 바운스 및 화면 밀림 원천 차단 */
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        touch-action: pan-y;
-    }
-    
-    .slide {
-        padding: 40px 15px 30px;
-        width: 16.6666%;
-        min-width: 16.6666%;
-    }
-
+/* 화면 크기에 맞춰 폰트 유동 조절 */
+@media (max-width: 900px) {
     .slide-content {
-        flex-direction: column; /* 가로 2열 플렉스를 세로 1열로 꺾음 */
-        gap: 10px;
-        max-height: 85vh;
-    }
-
-    .poster-wrapper {
-        width: 100px;
-        height: 150px;
-        max-height: 22vh;
-        margin: 0 auto;
-        box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.8), 
-                    -2px -2px 8px rgba(255, 255, 255, 0.03);
-    }
-
-    .info-card {
-        padding: 20px;
-        border-radius: 16px;
-        height: auto; /* 모바일에서는 세로 1열 흐름을 위해 고정 높이 해제 */
-        max-height: 48vh;
-        flex: none; /* 플렉스 비율 해제 */
-        width: 100%;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
         overflow-y: auto;
-        touch-action: pan-y;
-        justify-content: flex-start;
-        box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.8),
-                    -3px -3px 10px rgba(255, 255, 255, 0.02);
     }
-
+    .poster-wrapper {
+        max-width: 250px;
+        margin: 0 auto 20px;
+    }
     .title {
-        font-size: 1.4rem;
-        margin-bottom: 4px;
+        font-size: 2.2rem;
     }
-
-    .copywriting {
-        font-size: 0.95rem;
-        margin-bottom: 10px;
-        padding-left: 8px;
-    }
-
-    .genre-badge {
-        padding: 2px 6px;
-        font-size: 0.65rem;
-        margin-bottom: 6px;
-    }
-
-    .description-container {
-        font-size: 0.82rem;
-        line-height: 1.45;
-    }
-
-    /* 모바일에서는 버튼을 감추고 터치 스와이프 사용 */
     .nav-btn {
-        display: none !important;
-    }
-
-    .indicators {
-        bottom: 12px;
-        gap: 8px;
-    }
-
-    .dot {
-        width: 7px;
-        height: 7px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
     }
 }
