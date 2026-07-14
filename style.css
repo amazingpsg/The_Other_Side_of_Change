@@ -19,19 +19,21 @@
     -webkit-font-smoothing: antialiased;
 }
 
-body {
+html, body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     font-family: var(--font-body);
     overflow: hidden; /* 슬라이드 쇼 형태라 브라우저 스크롤 바를 감춤 */
     height: 100vh;
     width: 100vw;
+    /* 모바일 브라우저 오버스크롤(당겨서 새로고침/뒤로가기 제스처)을 완벽 차단 */
+    overscroll-behavior: none;
 }
 
 /* 슬라이더 전체 컨테이너 */
 .slider-container {
     position: relative;
-    width: 100%;
+    width: 600vw; /* 6개 슬라이드 가로폭 명시 선언 */
     height: 100vh;
     display: flex;
     transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
@@ -39,7 +41,9 @@ body {
 
 /* 개별 슬라이드 공통 */
 .slide {
+    width: 100vw;
     min-width: 100vw;
+    flex-shrink: 0; /* 가로폭 수축을 완벽히 차단 */
     height: 100vh;
     position: relative;
     display: flex;
@@ -155,7 +159,7 @@ body {
 
 /* 네비게이션 화살표 버튼 (피츠의 법칙 적용: 크고 클릭하기 쉽게) */
 .nav-btn {
-    position: absolute;
+    position: fixed; /* absolute에서 fixed로 수정하여 뷰포트에 단단히 고정 */
     top: 50%;
     transform: translateY(-50%);
     width: 70px;
@@ -169,7 +173,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10;
+    z-index: 100; /* 항상 최상단에 고정 */
     transition: all 0.3s ease;
     box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
 }
@@ -186,13 +190,13 @@ body {
 
 /* 하단 슬라이드 인디케이터 */
 .indicators {
-    position: absolute;
+    position: fixed; /* 뷰포트에 영구 고정 */
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 15px;
-    z-index: 10;
+    z-index: 100;
 }
 
 .dot {
@@ -225,11 +229,12 @@ body {
 /* 화면 크기에 맞춰 폰트 유동 조절 (모바일 타깃) */
 @media (max-width: 768px) {
     body {
-        overflow: hidden;
+        /* 모바일 전체에 touch-action: pan-y를 줘서 브라우저 좌우 제스처 뒤로가기를 원천 차단 */
+        touch-action: pan-y;
     }
     
     .slide {
-        padding: 50px 15px 30px; /* 패딩 축소 */
+        padding: 50px 15px 30px;
     }
 
     .slide-content {
@@ -241,7 +246,7 @@ body {
     }
 
     .poster-wrapper {
-        max-width: 130px; /* 모바일 전용 미니 포스터 */
+        max-width: 130px;
         margin: 0 auto;
         box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.8), 
                     -2px -2px 8px rgba(255, 255, 255, 0.03);
@@ -250,8 +255,10 @@ body {
     .info-card {
         padding: 20px;
         border-radius: 16px;
-        max-height: 48vh; /* 정보 카드 내 세로 스크롤 허용하여 본문 짤림 방지 */
+        max-height: 48vh;
         overflow-y: auto;
+        /* 카드 내부에서는 세로 터치 스크롤이 부드럽게 작동하도록pan-y 허용 */
+        touch-action: pan-y;
         box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.8),
                     -3px -3px 10px rgba(255, 255, 255, 0.02);
     }
@@ -278,9 +285,9 @@ body {
         line-height: 1.55;
     }
 
-    /* 모바일에서는 손가락 스와이프를 지원하므로 큰 화살표 버튼은 숨깁니다 */
+    /* 모바일에서는 손가락 스와이프를 지원하므로 화살표 버튼을 완벽히 숨깁니다 */
     .nav-btn {
-        display: none;
+        display: none !important;
     }
 
     .indicators {
