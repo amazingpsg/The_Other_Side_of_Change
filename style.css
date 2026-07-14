@@ -66,11 +66,10 @@ html, body {
 /* 슬라이드 내 레이아웃 (영화 포스터 이미지 + 글 내용의 2분할) */
 .slide-content {
     display: grid;
-    grid-template-columns: 320px 1.8fr; /* 포스터 폭을 320px로 단단히 고정 */
-    gap: 5%;
+    grid-template-columns: 320px 1fr; /* 우측 영역을 가변 1fr로 유연하게 확보 */
+    gap: 40px; /* 고정 픽셀 간격으로 화면 크기별 레이아웃 안정화 */
     width: 100%;
     max-width: 1200px;
-    max-height: 80vh; 
     align-items: center;
     z-index: 2;
 }
@@ -82,6 +81,7 @@ html, body {
     overflow: hidden;
     width: 320px;   /* 데스크탑 가로 확장 시 크기가 미쳐 날뛰는 현상 완벽 방지 */
     height: 480px;  /* 2:3 비율 절대값 박음질 */
+    flex-shrink: 0;
     max-width: 100%;
     /* 조명 바이어스: 좌측 상단에 미세한 빛, 우측 하단에 부드러운 그림자 */
     box-shadow: 12px 12px 30px rgba(0, 0, 0, 0.9), 
@@ -107,9 +107,13 @@ html, body {
     background: rgba(20, 20, 25, 0.6);
     backdrop-filter: blur(20px);
     border-radius: 24px;
-    padding: 40px;
-    max-height: 75vh;
+    padding: 35px;
+    /* 포스터 높이(480px)와 칼같이 일치시켜 그리드 찌그러짐을 완벽 차단 */
+    height: 480px; 
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 내부 글이 세로 중앙에 오도록 배치 */
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-left-color: rgba(255, 255, 255, 0.15);
     border-top-color: rgba(255, 255, 255, 0.15);
@@ -125,19 +129,20 @@ html, body {
     color: var(--text-primary);
     font-family: var(--font-title);
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 2px;
     border-radius: 50px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    align-self: flex-start;
 }
 
 .title {
     font-family: var(--font-title);
     font-weight: 900;
-    font-size: 3rem;
+    font-size: 2.4rem; /* 타이틀 줄바꿈 찌그러짐을 막기 위해 살짝 콤팩트화 */
     line-height: 1.2;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-gold));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -147,10 +152,10 @@ html, body {
 .copywriting {
     font-family: var(--font-title);
     font-weight: 600;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: var(--accent-gold);
     line-height: 1.4;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     border-left: 4px solid var(--accent-red);
     padding-left: 15px;
 }
@@ -159,12 +164,16 @@ html, body {
 .description-container {
     max-width: 55ch; /* 한 줄당 35~55자 유지 */
     color: var(--text-muted);
-    font-size: 1.05rem;
-    line-height: 1.7;
+    font-size: 1rem;
+    line-height: 1.65;
 }
 
 .description-container p {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+}
+
+.description-container p:last-child {
+    margin-bottom: 0;
 }
 
 .description-container strong {
@@ -274,9 +283,11 @@ html, body {
     .info-card {
         padding: 20px;
         border-radius: 16px;
+        height: auto; /* 모바일에서는 고정 높이를 해제하여 화면 크기에 유연하게 대응 */
         max-height: 48vh;
         overflow-y: auto;
         touch-action: pan-y;
+        justify-content: flex-start; /* 모바일에서는 상단부터 흐르도록 정렬 */
         box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.8),
                     -3px -3px 10px rgba(255, 255, 255, 0.02);
     }
