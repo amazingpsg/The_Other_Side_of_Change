@@ -10,17 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // 슬라이드 이동 함수
     function goToSlide(index) {
         if (index < 0) {
-            index = totalSlides - 1; // 처음 슬라이드에서 이전 누르면 마지막으로
+            index = totalSlides - 1;
         } else if (index >= totalSlides) {
-            index = 0; // 마지막 슬라이드에서 다음 누르면 처음으로
+            index = 0;
         }
         
         currentSlide = index;
-        
-        // 가로 슬라이딩 모션 적용
         slider.style.transform = `translateX(-${currentSlide * 100}vw)`;
         
-        // 인디케이터 도트 갱신
         dots.forEach((dot, idx) => {
             if (idx === currentSlide) {
                 dot.classList.add("active");
@@ -56,6 +53,28 @@ document.addEventListener("DOMContentLoaded", () => {
             goToSlide(currentSlide - 1);
         }
     });
+
+    // 모바일 터치 스와이프(Touch Swipe) 제어 추가
+    let startX = 0;
+    let endX = 0;
+
+    slider.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    slider.addEventListener("touchend", (e) => {
+        endX = e.changedTouches[0].clientX;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        const threshold = 50; // 스와이프 판정 최소 픽셀
+        if (startX - endX > threshold) {
+            goToSlide(currentSlide + 1); // 왼쪽 스와이프 -> 다음 슬라이드
+        } else if (endX - startX > threshold) {
+            goToSlide(currentSlide - 1); // 오른쪽 스와이프 -> 이전 슬라이드
+        }
+    }
 
     // 초기 상태 로드
     goToSlide(0);

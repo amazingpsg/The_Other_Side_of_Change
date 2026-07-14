@@ -222,23 +222,74 @@ body {
     z-index: 1;
 }
 
-/* 화면 크기에 맞춰 폰트 유동 조절 */
-@media (max-width: 900px) {
+/* 화면 크기에 맞춰 폰트 유동 조절 (모바일 타깃) */
+@media (max-width: 768px) {
+    body {
+        overflow: hidden;
+    }
+    
+    .slide {
+        padding: 50px 15px 30px; /* 패딩 축소 */
+    }
+
     .slide-content {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto;
-        overflow-y: auto;
+        gap: 15px;
+        align-content: center;
+        max-height: 85vh;
     }
+
     .poster-wrapper {
-        max-width: 250px;
-        margin: 0 auto 20px;
+        max-width: 130px; /* 모바일 전용 미니 포스터 */
+        margin: 0 auto;
+        box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.8), 
+                    -2px -2px 8px rgba(255, 255, 255, 0.03);
     }
+
+    .info-card {
+        padding: 20px;
+        border-radius: 16px;
+        max-height: 48vh; /* 정보 카드 내 세로 스크롤 허용하여 본문 짤림 방지 */
+        overflow-y: auto;
+        box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.8),
+                    -3px -3px 10px rgba(255, 255, 255, 0.02);
+    }
+
     .title {
-        font-size: 2.2rem;
+        font-size: 1.6rem;
+        margin-bottom: 5px;
     }
+
+    .copywriting {
+        font-size: 1.05rem;
+        margin-bottom: 15px;
+        padding-left: 8px;
+    }
+
+    .genre-badge {
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        margin-bottom: 10px;
+    }
+
+    .description-container {
+        font-size: 0.88rem;
+        line-height: 1.55;
+    }
+
+    /* 모바일에서는 손가락 스와이프를 지원하므로 큰 화살표 버튼은 숨깁니다 */
     .nav-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 1.2rem;
+        display: none;
+    }
+
+    .indicators {
+        bottom: 20px;
+        gap: 8px;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
     }
 }
