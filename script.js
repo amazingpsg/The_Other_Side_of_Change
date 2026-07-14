@@ -57,6 +57,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // 모바일 터치 스와이프 제어 (마우스 이벤트에는 영향 없음)
+    let startX = 0;
+    let endX = 0;
+
+    slider.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    slider.addEventListener("touchend", (e) => {
+        endX = e.changedTouches[0].clientX;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        const swipeThreshold = 50; // 50px 이상 밀어야 넘어감
+        if (startX - endX > swipeThreshold) {
+            goToSlide(currentSlide + 1);
+        } else if (endX - startX > swipeThreshold) {
+            goToSlide(currentSlide - 1);
+        }
+    }
+
     // 초기 상태 로드
     goToSlide(0);
 });
