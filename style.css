@@ -74,7 +74,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 /* 슬라이드 내 레이아웃 (영화 포스터 이미지 + 글 내용의 2분할) */
 .slide-content {
     display: grid;
-    grid-template-columns: 320px 1fr; /* 우측 영역을 가변 1fr로 유연하게 확보 */
+    /* 가로폭 1024px 이상의 웹 상태에서는 무조건 2분할 좌우 배치를 철저히 수호 */
+    grid-template-columns: auto 1fr;
     gap: 40px; /* 고정 픽셀 간격으로 화면 크기별 레이아웃 안정화 */
     width: 100%;
     max-width: 1200px;
@@ -82,15 +83,16 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     z-index: 2;
 }
 
-/* 영화 포스터 영역 (좌측 상단 조명 바이어스 적용) */
+/* 영화 포스터 영역 (높이를 60vh 비율로 설정하여 낮은 세로 화면에서도 찌그러짐을 완벽 방지) */
 .poster-wrapper {
     position: relative;
     border-radius: 16px;
     overflow: hidden;
-    width: 320px;   /* 데스크탑 가로 확장 시 크기가 미쳐 날뛰는 현상 완벽 방지 */
-    height: 480px;  /* 2:3 비율 절대값 박음질 */
+    height: 60vh;       /* 세로 높이에 비례하여 유동적으로 축소 */
+    max-height: 480px;  /* 최대 높이 제한으로 대화면 찌그러짐 완벽 방지 */
+    aspect-ratio: 2 / 3; /* 세로 높이에 맞춰 가로 폭 자동 연동 */
+    width: auto;
     flex-shrink: 0;
-    max-width: 100%;
     /* 조명 바이어스: 좌측 상단에 미세한 빛, 우측 하단에 부드러운 그림자 */
     box-shadow: 12px 12px 30px rgba(0, 0, 0, 0.9), 
                 -4px -4px 15px rgba(255, 255, 255, 0.03);
@@ -110,14 +112,14 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     object-fit: cover;
 }
 
-/* 우측 텍스트 설명 카드 (Glassmorphism + 조명 바이어스) */
+/* 우측 텍스트 설명 카드 (높이를 포스터와 동일한 60vh 비율로 일치) */
 .info-card {
     background: rgba(20, 20, 25, 0.6);
     backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 35px;
-    /* 포스터 높이(480px)와 칼같이 일치시켜 그리드 찌그러짐을 완벽 차단 */
-    height: 480px; 
+    height: 60vh;       /* 포스터와 정확히 60vh로 세로 비율 동기화 */
+    max-height: 480px;  /* 최대 높이 480px 완벽 일치 */
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -257,10 +259,10 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     z-index: 1;
 }
 
-/* 가로 해상도가 좁거나(1024px 이하), 혹은 브라우저 세로 창 높이가 협소할 때(700px 이하)의 듀얼 반응형 설정 */
-@media (max-width: 1024px) or (max-height: 700px) {
+/* 모바일 전용 미디어 쿼리 (가로폭 1024px 이하의 소형 스크린만 반응형 분기 처리) */
+@media (max-width: 1024px) {
     html, body {
-        position: fixed; /* 반응형 모드에서 화면 스크롤 꼬임 및 바운스 차단 */
+        position: fixed; /* 모바일에서 뷰포트 바운스 및 화면 밀림 원천 차단 */
         width: 100%;
         height: 100%;
         overflow: hidden;
@@ -268,7 +270,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     }
     
     .slide {
-        padding: 40px 15px 30px; /* 상하 여백을 조금 더 압축 */
+        padding: 40px 15px 30px;
         width: 16.6666%;
         min-width: 16.6666%;
     }
@@ -282,7 +284,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     }
 
     .poster-wrapper {
-        width: 100px; /* 세로 화면 압박 대비 포스터 미세 축소 */
+        width: 100px;
         height: 150px;
         max-height: 22vh;
         margin: 0 auto;
@@ -293,8 +295,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     .info-card {
         padding: 20px;
         border-radius: 16px;
-        height: auto; /* 고정 높이 480px를 완전히 해제하여 높이 찌그러짐 원천 차단 */
-        max-height: 48vh; /* 카드 내부에서 스크롤을 원활히 지원 */
+        height: auto; /* 모바일에서는 세로 1열 흐름을 위해 고정 높이 해제 */
+        max-height: 48vh;
         overflow-y: auto;
         touch-action: pan-y;
         justify-content: flex-start;
@@ -324,7 +326,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
         line-height: 1.45;
     }
 
-    /* 반응형 화면에서는 손가락 스와이프를 활용하므로 버튼 소거 */
+    /* 모바일에서는 버튼을 감추고 터치 스와이프 사용 */
     .nav-btn {
         display: none !important;
     }
