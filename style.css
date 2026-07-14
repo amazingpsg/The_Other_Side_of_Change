@@ -24,11 +24,19 @@ html, body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     font-family: var(--font-body);
-    overflow: hidden;
+    overflow: hidden !important;
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
+    /* 스크롤바가 숨더라도 슬라이더 폭이 왜곡되지 않도록 방지 */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+/* 크롬, 사파리, 오페라에서 스크롤바 틈새를 원천 소거 */
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;
 }
 
 /* 뷰포트를 완전히 잠그는 컨테이너 */
@@ -39,19 +47,19 @@ html, body {
     overflow: hidden;
 }
 
-/* 슬라이더 전체 컨테이너 */
+/* 슬라이더 전체 컨테이너 (vw 대신 %를 사용하여 누적 오차 완벽 차단) */
 .slider-container {
     position: relative;
-    width: 600vw; /* 6개 슬라이드 기준 폭 고정 */
+    width: 600%; /* 6개 슬라이드 기준 폭 고정 */
     height: 100%;
     display: flex;
     transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
-/* 개별 슬라이드 공통 */
+/* 개별 슬라이드 공통 (100% / 6 = 16.6666% 지정으로 화면 내 비율 칼같이 보존) */
 .slide {
-    width: 100vw;
-    min-width: 100vw;
+    width: 16.6666%;
+    min-width: 16.6666%;
     flex-shrink: 0; /* 강제로 찌그러짐 차단 */
     height: 100%;
     position: relative;
@@ -261,6 +269,8 @@ html, body {
     
     .slide {
         padding: 40px 15px 30px; /* 상하 여백을 조금 더 압축 */
+        width: 16.6666%;
+        min-width: 16.6666%;
     }
 
     .slide-content {

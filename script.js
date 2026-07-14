@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentSlide = 0;
     const totalSlides = dots.length;
 
-    // 슬라이드 이동 함수
+    // 슬라이드 이동 함수 (vw 대신 %를 기반으로 정밀 이동)
     function goToSlide(index) {
         if (index < 0) {
             index = totalSlides - 1;
@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         currentSlide = index;
-        slider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+        // 6개 슬라이드 기준: (currentSlide * 100) / totalSlides % 만큼 정확히 이동하여 오차가 누적되지 않음
+        slider.style.transform = `translateX(-${(currentSlide * 100) / totalSlides}%)`;
         
         dots.forEach((dot, idx) => {
             if (idx === currentSlide) {
@@ -57,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // 데스크탑 마우스 휠 스크롤 연동 추가 (에러 방어형 closest)
     let isWheeling = false;
     window.addEventListener("wheel", (e) => {
-        // e.target이 null이거나 Element가 아닐 경우를 대비한 완벽 방어형 closest 조회
         if (e.target && typeof e.target.closest === "function") {
             const card = e.target.closest(".info-card");
             if (card) {
