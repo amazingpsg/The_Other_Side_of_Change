@@ -10,3 +10,7 @@ Desktop.ini
 
 # 아티팩트 메타데이터 파일
 *.metadata.json
+
+# 환경변수 파일
+.env
+.env.*
