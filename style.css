@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Outfit:wght@300;600;900&display=swap');
+
+:root {
+    /* 침선비장 언년이의 5색 배색 가이드라인 */
+    --bg-color: hsl(240, 16%, 6%);       /* 거의 완벽한 검정, 영화관 테마 */
+    --accent-red: hsl(355, 100%, 50%);    /* 웅장한 블러드 레드 */
+    --accent-gold: hsl(38, 100%, 55%);    /* 화려한 오렌지 골드 */
+    --text-primary: hsl(0, 0%, 96%);      /* 눈이 편안한 밝은 화이트 (대비 90%) */
+    --text-muted: hsl(240, 8%, 65%);      /* 보조 회색 (대비 70% 이상 확보) */
+    
+    --font-title: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    overflow: hidden; /* 슬라이드 쇼 형태라 브라우저 스크롤 바를 감춤 */
+    height: 100vh;
+    width: 100vw;
+}
+
+/* 슬라이더 전체 컨테이너 */
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* 개별 슬라이드 공통 */
+.slide {
+    min-width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4% 8%;
+    background-size: cover;
+    background-position: center;
+}
+
+/* 슬라이드 내 레이아웃 (영화 포스터 이미지 + 글 내용의 2분할) */
+.slide-content {
+    display: grid;
+    grid-template-columns: 1.2fr 1.8fr;
+    gap: 5%;
+    width: 100%;
+    max-width: 1200px;
+    align-items: center;
+    z-index: 2;
+}
+
+/* 영화 포스터 영역 (좌측 상단 조명 바이어스 적용) */
+.poster-wrapper {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 2 / 3;
+    /* 언년이의 조명 바이어스: 좌측 상단에 미세한 빛, 우측 하단에 부드러운 그림자 */
+    box-shadow: 12px 12px 30px rgba(0, 0, 0, 0.9), 
+                -4px -4px 15px rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left-color: rgba(255, 255, 255, 0.2);
+    border-top-color: rgba(255, 255, 255, 0.2);
+    transition: transform 0.5s ease;
+}
+
+.poster-wrapper:hover {
+    transform: scale(1.03) rotate(-1deg);
+}
+
+.poster-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 우측 텍스트 설명 카드 (Glassmorphism + 조명 바이어스) */
+.info-card {
+    background: rgba(20, 20, 25, 0.6);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left-color: rgba(255, 255, 255, 0.15);
+    border-top-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 15px 15px 35px rgba(0, 0, 0, 0.8),
+                -5px -5px 15px rgba(255, 255, 255, 0.02);
+}
+
+/* 슬라이드 텍스트 서식 */
+.genre-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background-color: var(--accent-red);
+    color: var(--text-primary);
+    font-family: var(--font-title);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-family: var(--font-title);
+    font-weight: 900;
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+}
+
+.copywriting {
+    font-family: var(--font-title);
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--accent-gold);
+    line-height: 1.4;
+    margin-bottom: 25px;
+    border-left: 4px solid var(--accent-red);
+    padding-left: 15px;
+}
+
+/* 가독성을 높이기 위해 텍스트 너비 및 레이아웃 제한 */
+.description-container {
+    max-width: 55ch; /* 한 줄당 35~55자 유지 */
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+.description-container p {
+    margin-bottom: 15px;
+}
+
+.description-container strong {
+    color: var(--text-primary);
+}
+
+/* 네비게이션 화살표 버튼 (피츠의 법칙 적용: 크고 클릭하기 쉽게) */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 70px;
+    height: 70px;
+    background: rgba(15, 15, 20, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+}
+
+.nav-btn:hover {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+}
+
+.prev-btn { left: 30px; }
+.next-btn { right: 30px; }
+
+/* 하단 슬라이드 인디케이터 */
+.indicators {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 10;
+}
+
+.dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: var(--accent-red);
+    transform: scale(1.3);
+    box-shadow: 0 0 10px var(--accent-red);
+}
+
+/* 뒷배경 오버레이 필터 (블록버스터 시네마 분위기) */
+.slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 30%, rgba(20, 20, 25, 0.7) 0%, rgba(5, 5, 8, 0.95) 80%);
+    z-index: 1;
+}
+
+/* 화면 크기에 맞춰 폰트 유동 조절 */
+@media (max-width: 900px) {
+    .slide-content {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        overflow-y: auto;
+    }
+    .poster-wrapper {
+        max-width: 250px;
+        margin: 0 auto 20px;
+    }
+    .title {
+        font-size: 2.2rem;
+    }
+    .nav-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+}
