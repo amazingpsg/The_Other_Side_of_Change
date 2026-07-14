@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Outfit:wght@300;600;900&display=swap');
 
 :root {
-    /* 침선비장 언년이의 5색 배색 가이드라인 */
+    /* 침선비장 비밀 비법서의 5색 배색 가이드라인 */
     --bg-color: hsl(240, 16%, 6%);       /* 거의 완벽한 검정, 영화관 테마 */
     --accent-red: hsl(355, 100%, 50%);    /* 웅장한 블러드 레드 */
     --accent-gold: hsl(38, 100%, 55%);    /* 화려한 오렌지 골드 */
@@ -72,6 +72,8 @@ html, body {
     gap: 5%;
     width: 100%;
     max-width: 1200px;
+    /* 데스크탑 화면이 세로로 찌그러지지 않도록 최대 높이 가이드라인 적용 */
+    max-height: 80vh; 
     align-items: center;
     z-index: 2;
 }
@@ -82,7 +84,11 @@ html, body {
     border-radius: 16px;
     overflow: hidden;
     aspect-ratio: 2 / 3;
-    /* 언년이의 조명 바이어스: 좌측 상단에 미세한 빛, 우측 하단에 부드러운 그림자 */
+    /* 데스크탑 가로 해상도가 넓어질 때 세로로 무제한 커져 화면을 찌그러뜨리는 것을 완벽 차단 */
+    max-height: 60vh;
+    max-width: 40vh;
+    margin: 0 auto;
+    /* 조명 바이어스: 좌측 상단에 미세한 빛, 우측 하단에 부드러운 그림자 */
     box-shadow: 12px 12px 30px rgba(0, 0, 0, 0.9), 
                 -4px -4px 15px rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -107,6 +113,9 @@ html, body {
     backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 40px;
+    /* 데스크탑에서도 창 높이가 낮을 때 본문이 화면 밖으로 넘치지 않도록 카드 내부 스크롤 허용 */
+    max-height: 70vh;
+    overflow-y: auto;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-left-color: rgba(255, 255, 255, 0.15);
     border-top-color: rgba(255, 255, 255, 0.15);
@@ -253,13 +262,14 @@ html, body {
     .slide-content {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto;
-        gap: 12px;
+        gap: 10px;
         align-content: center;
         max-height: 82vh;
     }
 
     .poster-wrapper {
         max-width: 110px; /* 미세 크기 조절로 타이트한 폰 렌더링 최적화 */
+        max-height: 25vh; /* 모바일 세로 높이 제한 */
         margin: 0 auto;
         box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.8), 
                     -2px -2px 8px rgba(255, 255, 255, 0.03);
