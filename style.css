@@ -249,10 +249,10 @@ html, body {
     z-index: 1;
 }
 
-/* 화면 크기에 맞춰 폰트 유동 조절 (가로 해상도가 애매하게 좁은 태블릿/노트북 창을 대비하여 1024px로 격리 기준점 상향) */
-@media (max-width: 1024px) {
+/* 가로 해상도가 좁거나(1024px 이하), 혹은 브라우저 세로 창 높이가 협소할 때(700px 이하)의 듀얼 반응형 설정 */
+@media (max-width: 1024px) or (max-height: 700px) {
     html, body {
-        position: fixed; /* 1024px 이하부터 fixed 고정하여 모바일 스와이프 안정화 */
+        position: fixed; /* 반응형 모드에서 화면 스크롤 꼬임 및 바운스 차단 */
         width: 100%;
         height: 100%;
         overflow: hidden;
@@ -260,7 +260,7 @@ html, body {
     }
     
     .slide {
-        padding: 50px 15px 30px;
+        padding: 40px 15px 30px; /* 상하 여백을 조금 더 압축 */
     }
 
     .slide-content {
@@ -268,13 +268,13 @@ html, body {
         grid-template-rows: auto auto;
         gap: 10px;
         align-content: center;
-        max-height: 82vh;
+        max-height: 85vh;
     }
 
     .poster-wrapper {
-        width: 110px;
-        height: 165px;
-        max-height: 25vh;
+        width: 100px; /* 세로 화면 압박 대비 포스터 미세 축소 */
+        height: 150px;
+        max-height: 22vh;
         margin: 0 auto;
         box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.8), 
                     -2px -2px 8px rgba(255, 255, 255, 0.03);
@@ -283,8 +283,8 @@ html, body {
     .info-card {
         padding: 20px;
         border-radius: 16px;
-        height: auto; /* 고정 높이 해제하여 유연한 배열 유도 */
-        max-height: 48vh;
+        height: auto; /* 고정 높이 480px를 완전히 해제하여 높이 찌그러짐 원천 차단 */
+        max-height: 48vh; /* 카드 내부에서 스크롤을 원활히 지원 */
         overflow-y: auto;
         touch-action: pan-y;
         justify-content: flex-start;
@@ -293,39 +293,39 @@ html, body {
     }
 
     .title {
-        font-size: 1.5rem;
-        margin-bottom: 5px;
+        font-size: 1.4rem;
+        margin-bottom: 4px;
     }
 
     .copywriting {
-        font-size: 1.0rem;
-        margin-bottom: 12px;
+        font-size: 0.95rem;
+        margin-bottom: 10px;
         padding-left: 8px;
     }
 
     .genre-badge {
-        padding: 3px 8px;
-        font-size: 0.7rem;
-        margin-bottom: 8px;
+        padding: 2px 6px;
+        font-size: 0.65rem;
+        margin-bottom: 6px;
     }
 
     .description-container {
-        font-size: 0.85rem;
-        line-height: 1.5;
+        font-size: 0.82rem;
+        line-height: 1.45;
     }
 
-    /* 1024px 이하에서는 화살표를 소거하고 터치 스와이프를 활용 */
+    /* 반응형 화면에서는 손가락 스와이프를 활용하므로 버튼 소거 */
     .nav-btn {
         display: none !important;
     }
 
     .indicators {
-        bottom: 15px;
+        bottom: 12px;
         gap: 8px;
     }
 
     .dot {
-        width: 8px;
-        height: 8px;
+        width: 7px;
+        height: 7px;
     }
 }
