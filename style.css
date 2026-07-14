@@ -19,22 +19,33 @@
     -webkit-font-smoothing: antialiased;
 }
 
+/* 브라우저 화면의 꿀렁임, 오버스크롤 고무줄 효과를 완벽하게 차단하기 위한 강제 고정 */
 html, body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     font-family: var(--font-body);
-    overflow: hidden; /* 슬라이드 쇼 형태라 브라우저 스크롤 바를 감춤 */
-    height: 100vh;
-    width: 100vw;
-    /* 모바일 브라우저 오버스크롤(당겨서 새로고침/뒤로가기 제스처)을 완벽 차단 */
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    position: fixed; /* 페이지의 모든 스크롤 및 브라우저 당기기 원천 차단 */
+    top: 0;
+    left: 0;
     overscroll-behavior: none;
+}
+
+/* 뷰포트를 완전히 잠그는 컨테이너 */
+.viewport-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 /* 슬라이더 전체 컨테이너 */
 .slider-container {
     position: relative;
-    width: 600vw; /* 6개 슬라이드 가로폭 명시 선언 */
-    height: 100vh;
+    width: 600vw; /* 6개 슬라이드 기준 폭 고정 */
+    height: 100%;
     display: flex;
     transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
 }
@@ -43,8 +54,8 @@ html, body {
 .slide {
     width: 100vw;
     min-width: 100vw;
-    flex-shrink: 0; /* 가로폭 수축을 완벽히 차단 */
-    height: 100vh;
+    flex-shrink: 0; /* 강제로 찌그러짐 차단 */
+    height: 100%;
     position: relative;
     display: flex;
     align-items: center;
@@ -159,7 +170,7 @@ html, body {
 
 /* 네비게이션 화살표 버튼 (피츠의 법칙 적용: 크고 클릭하기 쉽게) */
 .nav-btn {
-    position: fixed; /* absolute에서 fixed로 수정하여 뷰포트에 단단히 고정 */
+    position: fixed; /* 뷰포트에 영구 박음질 */
     top: 50%;
     transform: translateY(-50%);
     width: 70px;
@@ -173,7 +184,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 100; /* 항상 최상단에 고정 */
+    z-index: 100;
     transition: all 0.3s ease;
     box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
 }
@@ -190,7 +201,7 @@ html, body {
 
 /* 하단 슬라이드 인디케이터 */
 .indicators {
-    position: fixed; /* 뷰포트에 영구 고정 */
+    position: fixed; /* 뷰포트에 영구 박음질 */
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
@@ -228,9 +239,11 @@ html, body {
 
 /* 화면 크기에 맞춰 폰트 유동 조절 (모바일 타깃) */
 @media (max-width: 768px) {
-    body {
-        /* 모바일 전체에 touch-action: pan-y를 줘서 브라우저 좌우 제스처 뒤로가기를 원천 차단 */
-        touch-action: pan-y;
+    html, body {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
     }
     
     .slide {
@@ -240,13 +253,13 @@ html, body {
     .slide-content {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto;
-        gap: 15px;
+        gap: 12px;
         align-content: center;
-        max-height: 85vh;
+        max-height: 82vh;
     }
 
     .poster-wrapper {
-        max-width: 130px;
+        max-width: 110px; /* 미세 크기 조절로 타이트한 폰 렌더링 최적화 */
         margin: 0 auto;
         box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.8), 
                     -2px -2px 8px rgba(255, 255, 255, 0.03);
@@ -257,46 +270,46 @@ html, body {
         border-radius: 16px;
         max-height: 48vh;
         overflow-y: auto;
-        /* 카드 내부에서는 세로 터치 스크롤이 부드럽게 작동하도록pan-y 허용 */
+        /* 카드 내부에서 세로 스크롤을 원활히 지원 */
         touch-action: pan-y;
         box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.8),
                     -3px -3px 10px rgba(255, 255, 255, 0.02);
     }
 
     .title {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         margin-bottom: 5px;
     }
 
     .copywriting {
-        font-size: 1.05rem;
-        margin-bottom: 15px;
+        font-size: 1.0rem;
+        margin-bottom: 12px;
         padding-left: 8px;
     }
 
     .genre-badge {
-        padding: 4px 10px;
-        font-size: 0.75rem;
-        margin-bottom: 10px;
+        padding: 3px 8px;
+        font-size: 0.7rem;
+        margin-bottom: 8px;
     }
 
     .description-container {
-        font-size: 0.88rem;
-        line-height: 1.55;
+        font-size: 0.85rem;
+        line-height: 1.5;
     }
 
-    /* 모바일에서는 손가락 스와이프를 지원하므로 화살표 버튼을 완벽히 숨깁니다 */
+    /* 모바일에서는 방향키 버튼이 완전히 보이지 않도록 강력 소거 */
     .nav-btn {
         display: none !important;
     }
 
     .indicators {
-        bottom: 20px;
+        bottom: 15px;
         gap: 8px;
     }
 
     .dot {
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
     }
 }
