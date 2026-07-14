@@ -54,27 +54,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 데스크탑 마우스 휠 스크롤 연동 추가
+    // 데스크탑 마우스 휠 스크롤 연동 추가 (에러 방어형 closest)
     let isWheeling = false;
     window.addEventListener("wheel", (e) => {
-        // 카드 내부에 스크롤이 동작 중일 때는 슬라이드 전환을 양보하여 스크롤 흐름 유지
-        const activeCard = document.querySelector(".slide-content");
-        if (e.target.closest(".info-card")) {
+        // e.target이 null이거나 Element가 아닐 경우를 대비한 완벽 방어형 closest 조회
+        if (e.target && typeof e.target.closest === "function") {
             const card = e.target.closest(".info-card");
-            // 카드 내용이 세로로 넘치고 카드가 스크롤 중일 때는 휠을 가로채지 않음
-            if (card.scrollHeight > card.clientHeight) {
-                const isScrollingDown = e.deltaY > 0;
-                const isAtBottom = card.scrollHeight - card.scrollTop <= card.clientHeight + 1;
-                const isAtTop = card.scrollTop === 0;
-                
-                if (isScrollingDown && !isAtBottom) return;
-                if (!isScrollingDown && !isAtTop) return;
+            if (card) {
+                // 카드 내용이 세로로 넘치고 카드가 스크롤 중일 때는 휠을 가로채지 않음
+                if (card.scrollHeight > card.clientHeight) {
+                    const isScrollingDown = e.deltaY > 0;
+                    const isAtBottom = card.scrollHeight - card.scrollTop <= card.clientHeight + 1;
+                    const isAtTop = card.scrollTop === 0;
+                    
+                    if (isScrollingDown && !isAtBottom) return;
+                    if (!isScrollingDown && !isAtTop) return;
+                }
             }
         }
 
         if (isWheeling) return;
         isWheeling = true;
-        setTimeout(() => { isWheeling = false; }, 900); // 0.9초 휠 딜레이 (디바운스)
+        setTimeout(() => { isWheeling = false; }, 900); // 0.9초 휠 디바운스
         
         if (e.deltaY > 0) {
             goToSlide(currentSlide + 1);
