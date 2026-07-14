@@ -71,28 +71,25 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     background-position: center;
 }
 
-/* 슬라이드 내 레이아웃 (영화 포스터 이미지 + 글 내용의 2분할) */
+/* 슬라이드 내 레이아웃 (그리드 대신 플렉스박스를 도입하여 물리적인 겹침을 완벽 차단) */
 .slide-content {
-    display: grid;
-    /* 가로폭 1024px 이상의 웹 상태에서는 무조건 2분할 좌우 배치를 철저히 수호 */
-    grid-template-columns: auto 1fr;
-    gap: 40px; /* 고정 픽셀 간격으로 화면 크기별 레이아웃 안정화 */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 40px; /* 고정 픽셀 간격으로 두 요소의 거리를 확실히 유지 */
     width: 100%;
     max-width: 1200px;
-    align-items: center;
     z-index: 2;
 }
 
-/* 영화 포스터 영역 (높이를 60vh 비율로 설정하여 낮은 세로 화면에서도 찌그러짐을 완벽 방지) */
+/* 영화 포스터 영역 (최초의 완벽하던 데스크탑 320x480 규격으로 복구) */
 .poster-wrapper {
     position: relative;
     border-radius: 16px;
     overflow: hidden;
-    height: 60vh;       /* 세로 높이에 비례하여 유동적으로 축소 */
-    max-height: 480px;  /* 최대 높이 제한으로 대화면 찌그러짐 완벽 방지 */
-    aspect-ratio: 2 / 3; /* 세로 높이에 맞춰 가로 폭 자동 연동 */
-    width: auto;
-    flex-shrink: 0;
+    width: 320px;   /* 가로 폭 320px로 절대 고정 */
+    height: 480px;  /* 세로 높이 480px로 절대 고정 */
+    flex-shrink: 0; /* 유연한 축소나 찌그러짐 원천 차단 */
     /* 조명 바이어스: 좌측 상단에 미세한 빛, 우측 하단에 부드러운 그림자 */
     box-shadow: 12px 12px 30px rgba(0, 0, 0, 0.9), 
                 -4px -4px 15px rgba(255, 255, 255, 0.03);
@@ -112,14 +109,15 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     object-fit: cover;
 }
 
-/* 우측 텍스트 설명 카드 (높이를 포스터와 동일한 60vh 비율로 일치) */
+/* 우측 텍스트 설명 카드 (Flex: 1 및 min-width: 0 적용으로 포스터 덮어쓰기 현상 완전 방지) */
 .info-card {
     background: rgba(20, 20, 25, 0.6);
     backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 35px;
-    height: 60vh;       /* 포스터와 정확히 60vh로 세로 비율 동기화 */
-    max-height: 480px;  /* 최대 높이 480px 완벽 일치 */
+    height: 480px;  /* 포스터 높이와 칼같이 1:1로 일치 */
+    flex: 1;        /* 남은 가로 폭을 시원하게 채움 */
+    min-width: 0;   /* 플렉스 컨테이너 안에서 카드가 포스터 위로 기어올라가는 겹침 버그 완벽 예방 */
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -276,10 +274,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     }
 
     .slide-content {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
+        flex-direction: column; /* 가로 2열 플렉스를 세로 1열로 꺾음 */
         gap: 10px;
-        align-content: center;
         max-height: 85vh;
     }
 
@@ -297,6 +293,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
         border-radius: 16px;
         height: auto; /* 모바일에서는 세로 1열 흐름을 위해 고정 높이 해제 */
         max-height: 48vh;
+        flex: none; /* 플렉스 비율 해제 */
+        width: 100%;
         overflow-y: auto;
         touch-action: pan-y;
         justify-content: flex-start;
