@@ -1,12 +1,12 @@
-# OS 찌꺼기 파일
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-.DS_Store
+# Environments (기밀 환경변수 차단)
+.env
+.env.*
 
-# 임시 및 로그 파일
+# Logs
+logs
 *.log
-*.tmp
+npm-debug.log*
 
-# 아티팩트 메타데이터 파일
-*.metadata.json
+# OS Files (운영체제 찌꺼기 파일 차단)
+.DS_Store
+Thumbs.db
