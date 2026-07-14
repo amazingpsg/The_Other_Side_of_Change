@@ -66,7 +66,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4% 8%;
+    padding: 4% 6%; /* 좌우 패딩을 미세하게 늘려 쾌적한 뷰포트 확보 */
     background-size: cover;
     background-position: center;
 }
@@ -76,13 +76,13 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 40px; /* 고정 픽셀 간격으로 두 요소의 거리를 확실히 유지 */
+    gap: 50px; /* 여백을 50px로 넉넉하게 넓혀 글방 아재 에세이의 독립 공간 사수 */
     width: 100%;
-    max-width: 1200px;
+    max-width: 1300px; /* 전체 컨텐츠 가로폭 한도를 넓혀 정보 카드가 찌그러지지 않게 방어 */
     z-index: 2;
 }
 
-/* 영화 포스터 영역 (최초의 완벽하던 데스크탑 320x480 규격으로 복구) */
+/* 영화 포스터 영역 (데스크탑 고정 320x480 규격 수호) */
 .poster-wrapper {
     position: relative;
     border-radius: 16px;
@@ -109,16 +109,18 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     object-fit: cover;
 }
 
-/* 우측 텍스트 설명 카드 (Flex: 1 및 min-width: 0 적용으로 포스터 덮어쓰기 현상 완전 방지) */
+/* 우측 텍스트 설명 카드 (높이 박음질 해제 및 min-height와 auto 높이 적용으로 찌부러짐 완벽 해결) */
 .info-card {
     background: rgba(20, 20, 25, 0.6);
     backdrop-filter: blur(20px);
     border-radius: 24px;
-    padding: 35px;
-    height: 480px;  /* 포스터 높이와 칼같이 1:1로 일치 */
-    flex: 1;        /* 남은 가로 폭을 시원하게 채움 */
-    min-width: 0;   /* 플렉스 컨테이너 안에서 카드가 포스터 위로 기어올라가는 겹침 버그 완벽 예방 */
-    overflow-y: auto;
+    padding: 30px 40px; /* 상하 패딩 최적화로 가로 폭 및 세로 비율 밸런스 확보 */
+    min-height: 480px; /* 최소 포스터 높이와 대칭을 이루되 */
+    height: auto;      /* 글 분량이 많을 때는 자연스럽게 세로로 늘어날 수 있게 해방 */
+    max-height: 80vh;  /* 단, 브라우저 가용 세로 높이의 80%는 넘지 않게 조율 */
+    flex: 1;           /* 남은 가로 폭을 풍성하게 채움 */
+    min-width: 0;      /* 플렉스 안에서 가로 찌부러짐 및 겹침 버그 완벽 예방 */
+    overflow-y: auto;  /* 높이가 80vh를 초과할 때만 정갈하게 내부 세로 스크롤 작동 */
     display: flex;
     flex-direction: column;
     justify-content: center; /* 내부 글이 세로 중앙에 오도록 배치 */
